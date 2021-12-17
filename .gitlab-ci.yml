@@ -1,0 +1,30 @@
+variables:
+  src_repo: registry.fedoraproject.org
+  src_image: grafana
+  dest_repo: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+
+docker-sync:
+  image: quay.io/skopeo/stable:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    # authenticate to GitLab container registry
+    - skopeo login --tls-verify=false -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+  script:
+    # sync Docker registries
+    - skopeo sync --all --keep-going --retry-times 5 --dest-tls-verify=false --src docker --dest docker $src_repo/$src_image $dest_repo
+
+  after_script:
+    # logout from all registries
+    - skopeo logout --all
+
+# TODO
+maven-sync:
+  image: alpine
+  stage: build
+  services:
+    - docker:dind
+  script:
+    - echo "hello world"
