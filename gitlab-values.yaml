@@ -1,0 +1,52 @@
+global:
+  ingress:
+    configureCertmanager: false
+    class: "nginx"
+    tls:
+      enabled: false
+  hosts:
+    https: false
+    domain: 192.168.99.100.nip.io
+    externalIP: 192.168.99.100
+  rails:
+    bootsnap:
+      enabled: false
+  shell:
+    port: 32022
+
+certmanager:
+  install: false
+
+nginx-ingress:
+  enabled: false
+
+prometheus:
+  install: false
+
+gitlab:
+  gitlab:
+  webservice:
+    minReplicas: 1
+    maxReplicas: 1
+  sidekiq:
+    minReplicas: 1
+    maxReplicas: 1
+  gitlab-shell:
+    minReplicas: 1
+    maxReplicas: 1
+    service:
+      type: NodePort
+      nodePort: 32022
+
+gitlab-runner:
+  runners:
+    privileged: true
+
+registry:
+  ingress:
+    enabled: true
+    tls:
+      enabled: false
+  hpa:
+    minReplicas: 1
+    maxReplicas: 1
